@@ -132,6 +132,7 @@ void sift_down(vec_t * heap,int i)
 }
 void delete_max(vec_t * heap)
 {
+    printf("max: %d\n",heap->data[0]);
     heap->data[0] = heap->data[heap->count-1];
     heap->data[heap->count-1] = 0;
     heap->count -= 1;
@@ -150,29 +151,48 @@ vec_t * build(int * arr, int n)
     }
     return heap;    
 }
+void helper_heapsort(vec_t * heap, int * arr)
+{
+    for (int i = heap->count-1; i >= 0; i--)
+    {
+        arr[i] = heap->data[0];
+        delete_max(heap);
+    }
+}
+// void heapsort(int * arr,int n)
+// {
+//     vec_t * heap = build(arr,n);
+//     helper_heapsort(heap,arr);
+// }
 
 int main()
 {
     int arr[10] = {1,2,3,4,5,6,7,8,9,0};
     vec_t * test = heapify(arr,10);
-    print_arr(test->data,test->size);
+    // print_arr(test->data,test->size);
     vec_t * heap;
     init_empty_vec_of_size(&heap,5);
     sift_up(heap,2);
-    print_arr(heap->data,heap->size);
-    sift_up(heap,5);
-    print_arr(heap->data,heap->size);
-    sift_up(heap,1);
     sift_up(heap,5);
     sift_up(heap,10);
-    sift_up(heap,8);
-    sift_up(heap,4);
-    sift_up(heap,3);
-    print_arr(heap->data,heap->size);
+    // print_arr(heap->data,heap->size);
     delete_max(heap);
-    print_arr(heap->data,heap->size);
+
+
+    // test
+    int sort[5] = {0};
+    sift_up(heap,8);
+    sift_up(heap,1);
+    helper_heapsort(heap,sort);
+    print_arr(sort,5);
+    printf("\nheapsort\n");
+    // test
+
+    // print_arr(heap->data,heap->size);
     int arr2[10] = {1,2,3,4,5,6,7,8,9,0};
     vec_t * build_test = build(arr2,10);
     print_arr(build_test->data,build_test->size);
+    // heapsort(arr2,10);
+    // print_arr(arr2,10);
     return 0;
 }
