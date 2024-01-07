@@ -137,6 +137,19 @@ void delete_max(vec_t * heap)
     heap->count -= 1;
     sift_down(heap,0);
 }
+vec_t * build(int * arr, int n)
+{
+    vec_t * heap = (vec_t *) malloc(sizeof(vec_t));
+    heap->data = arr;
+    heap->count = n;
+    heap->size = n;
+
+    for (int i = (heap->count-1)/2; i >= 0; i--)
+    {
+        sift_down(heap,i);
+    }
+    return heap;    
+}
 
 int main()
 {
@@ -158,5 +171,8 @@ int main()
     print_arr(heap->data,heap->size);
     delete_max(heap);
     print_arr(heap->data,heap->size);
+    int arr2[10] = {1,2,3,4,5,6,7,8,9,0};
+    vec_t * build_test = build(arr2,10);
+    print_arr(build_test->data,build_test->size);
     return 0;
 }
