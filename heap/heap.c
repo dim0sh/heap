@@ -7,14 +7,12 @@ typedef struct Vec
     int size;
     int count;
 }vec_t;
-
 void swap(int * current, int * next)
 {
     int tmp = *current;
     *current = *next;
     *next = tmp;
 }
-
 void print_arr(int * arr,int n)
 {
     for (int i = 0; i<n; i++)
@@ -96,15 +94,55 @@ void sift_up(vec_t * heap,int key)
 {
     vec_pushback(heap,key);
     int i = heap->count-1;
-    while (i>0 && heap->data[parent(i)<heap->data[i]])
+    while (i>0 && heap->data[parent(i)]<heap->data[i])
     {
         swap(&heap->data[i],&heap->data[parent(i)]);
         i = parent(i);
     }
 }
+vec_t * heapify(int *arr,int size)
+{
+    vec_t * heap;
+    init_empty_vec_of_size(&heap,size);
+    for (int i = 0; i<size; i++)
+    {
+        sift_up(heap,arr[i]);
+    }
+    return heap;
+}
+void sift_down(vec_t * heap,int i)
+{
+    int m;
+    if (left_child(i) <= heap->count-1)
+    {
+        if (right_child(i) > heap->count-1 || heap->data[left_child(i)] >= heap->data[right_child(i)])
+        {
+            m = left_child(i);
+        } 
+        else 
+        {
+            m = right_child(i);
+        }
+        if (heap->data[m] > heap->data[i])
+        {
+            swap(&heap->data[m],&heap->data[i]);
+            sift_down(heap,m);
+        }
+    }
+}
+void delete_max(vec_t * heap)
+{
+    heap->data[0] = heap->data[heap->count-1];
+    heap->data[heap->count-1] = 0;
+    heap->count -= 1;
+    sift_down(heap,0);
+}
 
 int main()
 {
+    int arr[10] = {1,2,3,4,5,6,7,8,9,0};
+    vec_t * test = heapify(arr,10);
+    print_arr(test->data,test->size);
     vec_t * heap;
     init_empty_vec_of_size(&heap,5);
     sift_up(heap,2);
@@ -114,6 +152,11 @@ int main()
     sift_up(heap,1);
     sift_up(heap,5);
     sift_up(heap,10);
+    sift_up(heap,8);
+    sift_up(heap,4);
+    sift_up(heap,3);
+    print_arr(heap->data,heap->size);
+    delete_max(heap);
     print_arr(heap->data,heap->size);
     return 0;
 }
